@@ -7,7 +7,7 @@ import UpperContainer from "../Component/UpperContainer";
 const SCREEN_WIDTH = Dimensions.get('screen').width;
 const SCREEN_HEIGHT = Dimensions.get('screen').height;
 
-const Home = ({navigation}) => {
+const Home = ({navigation} : any) => {
 
     return (
     <View style={style.container}>
