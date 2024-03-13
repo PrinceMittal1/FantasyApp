@@ -1,95 +1,153 @@
-import { View, Text, StyleSheet, TextInput, Button, TouchableOpacity } from "react-native"
+import { View, Text, StyleSheet, TextInput, Button, TouchableOpacity, ScrollView, Dimensions} from "react-native"
 import UpperContainer from "../Component/UpperContainer"
 import { RFValue } from "react-native-responsive-fontsize"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { colors } from "../Assets/colors";
 import { dateToStringDate } from "../functions/dateToStringDate";
+import Contest from "../Component/Contest";
+import sortingAllContest from "../functions/sortingAllContest";
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
-const todayDate = new Date();
+const SCREEN_WIDTH = Dimensions.get('screen').width;
+const SCREEN_HEIGHT = Dimensions.get('screen').height;
 
 const ContestCreationScreen = () => {
     const [contestName, setContestName] = useState("");
     const [selectedDate, setSelectedDate] = useState(new Date());
-    const [dateInString, setDateInString] = useState(dateToStringDate(selectedDate));
+    const [allContest, setAllContest] = useState([]);
     const [showDatePicker, setShowDatePicker] = useState(false);
 
-    const handleDateChange = (event, date) => {
+    const handleDateChange = (date: Date) => {
         if (date !== undefined) {
             setSelectedDate(date);
-            setDateInString(dateToStringDate(date))
-            setShowDatePicker(false);
+            const dateformat = dateToStringDate(date)
+            setAllContest(sortingAllContest([...allContest, dateformat]));
+            hideDatePicker();
         } else {
-            setShowDatePicker(false);
+            hideDatePicker();
         }
+    };
+
+    const selectedEveryDay = () => {
+        const everyDayDates = [];
+        const today = new Date();
+        for (let i = 0; i < 7; i++) {
+            const newDate = new Date(today);
+            newDate.setDate(today.getDate() + i);
+            everyDayDates.push(dateToStringDate(newDate));
+        }
+        setAllContest(everyDayDates);
+    };
+
+    const deletingContest = (index : number) => {
+        let newArray = allContest.filter((_, indexs) => indexs !== index);
+        setAllContest(newArray)
+    }
+
+    const changinTimeOfContest = () => {
+
+    }
+
+    useEffect(() => {
+        return () => {
+            setShowDatePicker(false);
+        };
+    }, []);
+    const toggleDatePicker = () => {
+        setShowDatePicker(true);
+    };
+
+    const hideDatePicker = () => {
+        setShowDatePicker(false);
     };
 
     return (
         <View style={style.container}>
 
-
             <UpperContainer />
 
-            {/* <View> */}
+            <View style={{ marginHorizontal: RFValue(20) }}>
 
-                <View style={{ marginHorizontal: RFValue(20) }}>
-                    <View>
-                        <Text style={style.contestNameText}>Please add name of the contest</Text>
+                <View>
+                    <Text style={style.contestNameText}>Please add name of the contest</Text>
 
-                        <TextInput
-                            style={style?.contestInputStyle}
-                            value={contestName}
-                            maxLength={14}
-                            onChangeText={(t) => setContestName(t)}
-                            placeholder="Name of the contest"
-                            placeholderTextColor={"black"}
-                            underlineColorAndroid="#f000"
-                            returnKeyType="next"
-                        />
-                    </View>
+                    <TextInput
+                        style={style?.contestInputStyle}
+                        value={contestName}
+                        maxLength={14}
+                        onChangeText={(t) => setContestName(t)}
+                        placeholder="Name of the contest"
+                        placeholderTextColor={"black"}
+                        underlineColorAndroid="#f000"
+                        returnKeyType="next"
+                    />
+                </View>
 
-                    <View>
-                        <Text style={style.contestNameText}>Please Select Date for Contest</Text>
-                    </View>
+                <View>
+                    <Text style={style.contestNameText}>Please Select Date for Contest</Text>
+                </View>
 
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
 
-                        <TouchableOpacity style={style.dateSelectionButton} onPress={() => setShowDatePicker(true)}>
-                            <View>
-                                <Text style={{ color: 'white', fontSize: RFValue(20) }}>Select Date</Text>
-                            </View>
-                        </TouchableOpacity>
+                    <TouchableOpacity style={style.dateSelectionButton} onPress={toggleDatePicker}>
+                        <View>
+                            <Text style={style.selectDateButton}>Add Contest</Text>
+                        </View>
+                    </TouchableOpacity>
 
-                        <TouchableOpacity style={style.dateSelectionButton} onPress={() => setDateInString("Every Day")}>
-                            <View>
-                                <Text style={{ color: 'white', fontSize: RFValue(20) }}>Every Day</Text>
-                            </View>
-                        </TouchableOpacity>
-
-                    </View>
-
-                    <View>
-                        <Text style={style.contestNameText}>{dateInString}</Text>
-                    </View>
-
-                    {showDatePicker &&
-                        (
-                            <DateTimePicker
-                                value={selectedDate}
-                                mode="time"
-                                display="default"
-                                onChange={handleDateChange}
-                            />
-                        )
-                    }
+                    <TouchableOpacity style={style.dateSelectionButton} onPress={selectedEveryDay}>
+                        <View>
+                            <Text style={style.selectDateButton}>Every Day</Text>
+                        </View>
+                    </TouchableOpacity>
 
                 </View>
-            {/* </View> */}
+
+                <View style={{height:SCREEN_HEIGHT/2.1}}>
+                    <ScrollView>
+                        {
+                            allContest?.length > 0 ?
+                                allContest?.map((item, index) =>
+                                    <Contest key={index} data={item} index={index} deletingContest={deletingContest} />)
+                                :
+                                null
+                        }
+                    </ScrollView>
+                </View>
+
+                {showDatePicker &&
+                    (
+                        <DateTimePickerModal
+                            isVisible={showDatePicker}
+                            mode="date"
+                            onConfirm={handleDateChange}
+                            onCancel={hideDatePicker}
+                            display='spinner'
+                            minimumDate={new Date()}
+                            date={selectedDate}
+                        />
+                    )
+                }
+            </View>
+
+            <TouchableOpacity onPress={()=>console.log("clicked on confirm buttin")} style={style.confirmButtonStyle}>
+                  <Text style={{fontSize:RFValue(20), color:'white'}}>Confirm</Text>
+            </TouchableOpacity>
+
         </View>
     )
 }
 
 const style = StyleSheet.create({
+    confirmButtonStyle:{
+        width:SCREEN_WIDTH, 
+        backgroundColor:colors.hperul, 
+        justifyContent:'center', 
+        alignItems:'center', 
+        height:RFValue(50), 
+        position:'absolute', bottom:0
+    },
     contestInputStyle: {
         color: "black",
         fontSize: RFValue(14.5),
@@ -97,6 +155,10 @@ const style = StyleSheet.create({
         borderWidth: 1,
         paddingHorizontal: RFValue(13),
         borderRadius: RFValue(4)
+    },
+    selectDateButton: {
+        color: 'white',
+        fontSize: RFValue(20)
     },
     dateSelectionButton: {
         height: RFValue(50),

@@ -14,8 +14,6 @@ import {
   const SCREEN_HEIGHT = Dimensions.get('screen').height;
   
   const CustomDrawer = ({ navigation, route }: any) => {
-   
-  
   
     return (
       <>
