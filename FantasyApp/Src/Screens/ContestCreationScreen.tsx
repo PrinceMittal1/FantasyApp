@@ -126,10 +126,11 @@ const ContestCreationScreen = ({ navigation }) => {
     }
 
     const savingDataToRedux = () => {
+        console.log("all contest from redux", [...AllContest?.allContest, ...allContest])
         allContest.forEach((obj, index) => {
             obj.name = contestName;
         });
-        dispatch(PostContestAction(allContest))
+        dispatch(PostContestAction([...AllContest?.allContest, ...allContest]))
         setConfirmationModalPopUp(false)
         navigation.navigate("Home")
     }
