@@ -17,43 +17,6 @@ import store from './Src/Redux/store';
 function App(): React.JSX.Element {
 
   const Stack = createStackNavigator();
-  const Drawer = createDrawerNavigator();
-
-
-  function DashboardStack() {
-    return (
-      <>
-        <Drawer.Navigator
-          backBehavior="history"
-          screenOptions={{ drawerStyle: { borderTopRightRadius: 25 } }}
-          drawerContent={(props: any) => (
-            <CustomDrawer
-              {...props}
-
-              screenOptions={{
-                headerShown: false,
-                borderWidth: 1,
-                swipeEdgeWidth: 0,
-                edgeWidth: 0,
-                unmountOnBlur: true,
-              }}
-            />
-          )}>
-          <Drawer.Screen
-            options={{
-              headerShown: false,
-              headerStyle: { backgroundColor: '#1F3876' },
-              headerTintColor: 'white',
-              drawerType: 'front',
-            }}
-            name="ContestCreationScreen"
-            component={ContestCreationScreen}
-          />
-          <DashboardStack />
-        </Drawer.Navigator>
-      </>
-    );
-  }
 
 
   return (
@@ -76,13 +39,6 @@ function App(): React.JSX.Element {
             component={ContestCreationScreen}
             options={{ headerShown: false }}
           />
-          {/* <Stack.Screen
-          name="dashboard"
-          component={DashboardStack}
-          options={{
-            headerShown: false,
-          }}
-        /> */}
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
