@@ -6,7 +6,7 @@ import { colors } from "../Assets/colors";
 const SCREEN_WIDTH = Dimensions.get('screen').width;
 const SCREEN_HEIGHT = Dimensions.get('screen').height;
 
-const ConfirmationModal = ({ contestLength, contestName, setConfirmationModalPopUp, savingDataToRedux }) => {
+const ConfirmationModal = ({ contestLength, contestName, setConfirmationModalPopUp, savingDataToRedux } : any) => {
 
     return (
         <Modal onRequestClose={()=>{setConfirmationModalPopUp(false)}} visible={true} transparent={true}>

@@ -3,24 +3,38 @@ import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Image, ScrollView
 import { RFValue } from "react-native-responsive-fontsize"
 import { IMAGE } from "../Assets/Images"
 import UpperContainer from "../Component/UpperContainer";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Contest from "../Component/Contest";
+import { PostContestAction } from "../Redux/Actions/postContestAction";
+import { changingTimeOfContests } from "../functions/changingTimeOfContests";
 
 const SCREEN_WIDTH = Dimensions.get('screen').width;
 const SCREEN_HEIGHT = Dimensions.get('screen').height;
 
 const Home = ({ navigation }: any) => {
-    const AllContest = useSelector(state => state.allContest)
+    const AllContest = useSelector(state=> state.allContest)
     const [allContest, setAllContest] = useState(AllContest?.allContest);
 
+    const dispatch = useDispatch();
+
     const deletingContest = (index : number) => {
-        let newArray = allContest.filter((_, indexs) => indexs !== index);
+        let newArray = allContest.filter((_:any, indexs:number) => indexs !== index);
         setAllContest(newArray)
+        dispatch(PostContestAction(newArray))
+    }
+
+    const changinTimeOfContest = (index:number,timetoChange:string,data:any) => {
+        const newtime = changingTimeOfContests(allContest[index], index, timetoChange, data)
+        const newarray = [...allContest];
+        newarray[index] = newtime;
+        setAllContest(newarray);
+        dispatch(PostContestAction(newarray))
     }
 
     useEffect(()=>{
         setAllContest(AllContest?.allContest)
     },[AllContest])
+
 
     return (
         <View style={style.container}>
@@ -43,8 +57,8 @@ const Home = ({ navigation }: any) => {
                 <ScrollView>
                     {
                         allContest?.length > 0 ?
-                           allContest?.map((item, index) =>
-                                <Contest key={index} data={item} index={index} deletingContest={deletingContest} />)
+                           allContest?.map((item:any, index:number) =>
+                                <Contest key={index} data={item} index={index} deletingContest={deletingContest} changinTimeOfContest={changinTimeOfContest}/>)
                             :
                             null
                     }
