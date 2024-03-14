@@ -60,7 +60,7 @@ function App(): React.JSX.Element {
     <Provider store={store}>
       <NavigationContainer>
 
-        <Stack.Navigator initialRouteName="Home">
+        <Stack.Navigator initialRouteName="SplashScreen">
           <Stack.Screen
             name="SplashScreen"
             component={SplashScreen}

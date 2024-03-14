@@ -2,6 +2,7 @@ import {createStore, combineReducers, applyMiddleware} from "redux"
 import {thunk} from 'redux-thunk'
 import { getContestReducer } from "./Reducers/getContestReducer"
 import { postContestReducer } from "./Reducers/postContestReducer"
+import saveDataMiddleware from "../functions/saveDataToMiddleWare"
 
 const rootReducer = combineReducers({
     allContest : postContestReducer
@@ -9,7 +10,7 @@ const rootReducer = combineReducers({
 
 const initialstate = {}
 
-const middleware = [thunk]
+const middleware = [thunk, saveDataMiddleware]
 
 const store = createStore(rootReducer, initialstate, applyMiddleware(...middleware))
 
