@@ -7,8 +7,10 @@ import { NavigationContainer } from '@react-navigation/native';
 import Home from "./Src/Screens/Home";
 import SplashScreen from "./Src/Component/SplashScreen";
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import { Provider } from 'react-redux';
 import CustomDrawer from "./Src/Component/CustomDrawer";
 import ContestCreationScreen from "./Src/Screens/ContestCreationScreen";
+import store from './Src/Redux/store';
 
 
 
@@ -55,33 +57,35 @@ function App(): React.JSX.Element {
 
 
   return (
-    <NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>
 
-      <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen
-          name="SplashScreen"
-          component={SplashScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Home"
-          component={Home}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="ContestCreation"
-          component={ContestCreationScreen}
-          options={{ headerShown: false }}
-        />
-        {/* <Stack.Screen
+        <Stack.Navigator initialRouteName="Home">
+          <Stack.Screen
+            name="SplashScreen"
+            component={SplashScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Home"
+            component={Home}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="ContestCreation"
+            component={ContestCreationScreen}
+            options={{ headerShown: false }}
+          />
+          {/* <Stack.Screen
           name="dashboard"
           component={DashboardStack}
           options={{
             headerShown: false,
           }}
         /> */}
-      </Stack.Navigator>
-    </NavigationContainer>
+        </Stack.Navigator>
+      </NavigationContainer>
+    </Provider>
   );
 }
 

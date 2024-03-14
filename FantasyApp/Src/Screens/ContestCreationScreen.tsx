@@ -8,15 +8,22 @@ import { dateToStringDate } from "../functions/dateToStringDate";
 import Contest from "../Component/Contest";
 import sortingAllContest from "../functions/sortingAllContest";
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import ConfirmationModal from "../Component/CofirmationModal";
+import { useDispatch } from "react-redux";
+import { PostContestAction } from "../Redux/Actions/postContestAction";
+import { changingTimeOfContests } from "../functions/changingTimeOfContests";
 
 const SCREEN_WIDTH = Dimensions.get('screen').width;
 const SCREEN_HEIGHT = Dimensions.get('screen').height;
 
-const ContestCreationScreen = () => {
+const ContestCreationScreen = ({navigation}) => {
     const [contestName, setContestName] = useState("");
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [allContest, setAllContest] = useState([]);
     const [showDatePicker, setShowDatePicker] = useState(false);
+    const [confirmationModalPopUp, setConfirmationModalPopUp] = useState(false);
+
+    const dispatch = useDispatch();
 
     const handleDateChange = (date: Date) => {
         if (date !== undefined) {
@@ -45,8 +52,20 @@ const ContestCreationScreen = () => {
         setAllContest(newArray)
     }
 
-    const changinTimeOfContest = () => {
+    const changinTimeOfContest = (index,timetoChange,data) => {
+        const newtime = changingTimeOfContests(allContest[index], index, timetoChange, data)
+        const newarray = [...allContest];
+        newarray[index] = newtime;
+        setAllContest(newarray);
+    }
 
+    const savingDataToRedux = () =>{
+        allContest.forEach((obj, index) => {
+            obj.name = contestName;
+        });
+        dispatch(PostContestAction(allContest))
+        setConfirmationModalPopUp(false)
+        navigation.navigate("Home")
     }
 
     useEffect(() => {
@@ -62,7 +81,10 @@ const ContestCreationScreen = () => {
         setShowDatePicker(false);
     };
 
+    
+
     return (
+        <>
         <View style={style.container}>
 
             <UpperContainer />
@@ -109,7 +131,7 @@ const ContestCreationScreen = () => {
                         {
                             allContest?.length > 0 ?
                                 allContest?.map((item, index) =>
-                                    <Contest key={index} data={item} index={index} deletingContest={deletingContest} />)
+                                    <Contest key={index} data={item} index={index} deletingContest={deletingContest} changinTimeOfContest={changinTimeOfContest}/>)
                                 :
                                 null
                         }
@@ -131,11 +153,15 @@ const ContestCreationScreen = () => {
                 }
             </View>
 
-            <TouchableOpacity onPress={()=>console.log("clicked on confirm buttin")} style={style.confirmButtonStyle}>
+            <TouchableOpacity onPress={()=>setConfirmationModalPopUp(true)} style={style.confirmButtonStyle}>
                   <Text style={{fontSize:RFValue(20), color:'white'}}>Confirm</Text>
             </TouchableOpacity>
 
         </View>
+        {
+            confirmationModalPopUp && <ConfirmationModal savingDataToRedux={savingDataToRedux} contestLength = {allContest?.length} contestName={contestName} setConfirmationModalPopUp={setConfirmationModalPopUp}/>
+        }
+        </>
     )
 }
 

@@ -1,6 +1,8 @@
 import { GET_All_CONTEST_REQUEST, GET_All_CONTEST_SUCCESS, GET_All_CONTEST_FAIL } from "../type";
 
-export const getContestAction = () => async (dispatch) => {
+export const getContestAction = () => async (dispatch, data) => {
+
+    console.log("data us ", data)
     try {
         dispatch({ type: GET_All_CONTEST_REQUEST })
         const { data } = await axios.get('https://jsonplaceholder.typicode.com/posts')

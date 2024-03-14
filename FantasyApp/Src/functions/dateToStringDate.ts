@@ -1,9 +1,7 @@
-const dateToStringDate = (date: Date) => {
+const dateToStringDate = (date) => {
     let currentDateAndTime = new Date();
     let laterDateForTime = new Date(date.getTime() + (2 * 60 * 60 * 1000));
     let laterDateForDays = new Date(date.getTime() + (2 * 60 * 60 * 1000)); // Adding 2 hours
-
-    console.log("current date and time ", currentDateAndTime, laterDateForTime);
     let day = date?.getDay() === 0 ?
         "Sunday" :
         date?.getDay() === 1 ? "Monday" :

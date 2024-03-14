@@ -1,9 +1,10 @@
 import {createStore, combineReducers, applyMiddleware} from "redux"
 import {thunk} from 'redux-thunk'
 import { getContestReducer } from "./Reducers/getContestReducer"
+import { postContestReducer } from "./Reducers/postContestReducer"
 
 const rootReducer = combineReducers({
-    allContest : getContestReducer
+    allContest : postContestReducer
 })
 
 const initialstate = {}

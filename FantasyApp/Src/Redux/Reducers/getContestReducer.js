@@ -1,4 +1,4 @@
-import { GET_All_CONTEST_REQUEST, GET_All_CONTEST_SUCCESS, GET_All_CONTEST_FAIL } from "../type";
+import { GET_All_CONTEST_REQUEST, GET_All_CONTEST_SUCCESS, GET_All_CONTEST_FAIL } from "../types";
 
 
 export const getContestReducer = (state = {users:[]}, action ) =>{
